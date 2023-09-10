@@ -223,4 +223,4 @@ class ToyDbQuery {
   }
 }
 
-module.exports = ToyDbQuery;
+export default ToyDbQuery;
