@@ -4,20 +4,6 @@ class ToyDbQuery {
     this.urlString = this.url.toJSON();
   }
 
-  // connect() {
-  //   let u = this.url;
-  //   let p = new Promise(async function (resolve, reject) {
-  //     try {
-  //       let res = await fetch(u);
-  //       let b = await res.text();
-  //       resolve(b);
-  //     } catch (err) {
-  //       reject(err);
-  //     }
-  //   });
-
-  //   return p;
-  // }
   listCollection() {
     let u = this.urlString;
     let p = new Promise(async (resolve, reject) => {
@@ -69,7 +55,6 @@ class ToyDbQuery {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            // 'Content-Type': 'application/x-www-form-urlencoded',
           },
           body: JSON.stringify(data),
         });
@@ -84,7 +69,6 @@ class ToyDbQuery {
   }
 
   query({ collection, limit }) {
-    //http://localhost:2080/records?limit=40&collection=dev
     if (!collection) {
       let p = new Promise((resolve, reject) => {
         reject(Error("Collection must be specified"));
@@ -171,10 +155,7 @@ class ToyDbQuery {
     return p;
   }
 
-  // field := r.FormValue("field")
-  // 	id := r.FormValue("id")
-  // 	value := r.FormValue("value")
-  // 	clc := r.FormValue("collection")
+  
   updateRecord({ field, value, collection, id }) {
     if (!collection || !field || !value || !id) {
       let p = new Promise((resolve, reject) => {
@@ -242,4 +223,4 @@ class ToyDbQuery {
   }
 }
 
-module.exports = ToyDbQuery
+module.exports = ToyDbQuery;
