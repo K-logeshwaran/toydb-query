@@ -1,31 +1,29 @@
-// const url = 'https://jsonplaceholder.typicode.com/todos/';
-//http://localhost:2080/
 class ToyDbQuery {
   constructor(url) {
     this.url = new URL(url);
     this.urlString = this.url.toJSON();
   }
 
-  connect() {
-    let u = this.url;
-    let p = new Promise(async function (resolve, reject) {
-      try {
-        let res = await fetch(u);
-        let b = await res.text();
-        resolve(b);
-      } catch (err) {
-        reject(err);
-      }
-    });
+  // connect() {
+  //   let u = this.url;
+  //   let p = new Promise(async function (resolve, reject) {
+  //     try {
+  //       let res = await fetch(u);
+  //       let b = await res.text();
+  //       resolve(b);
+  //     } catch (err) {
+  //       reject(err);
+  //     }
+  //   });
 
-    return p;
-  }
+  //   return p;
+  // }
   listCollection() {
     let u = this.urlString;
     let p = new Promise(async (resolve, reject) => {
       try {
         let res = await fetch(u + "/collection");
-        
+
         let json = await res.json();
         if (json === null) {
           resolve("No collection Created yet");
@@ -74,7 +72,6 @@ class ToyDbQuery {
             // 'Content-Type': 'application/x-www-form-urlencoded',
           },
           body: JSON.stringify(data),
-          
         });
         let txt = await res.text();
 
@@ -111,11 +108,11 @@ class ToyDbQuery {
         reject(err);
       }
     });
-    return p 
+    return p;
   }
 
-  find({collection,id}){
-    if (!collection||!id) {
+  find({ collection, id }) {
+    if (!collection || !id) {
       let p = new Promise((resolve, reject) => {
         reject(Error("Collection and ID must be specified"));
       });
@@ -131,9 +128,9 @@ class ToyDbQuery {
 
       try {
         let res = await fetch(URL);
-        if(res.status!=200){
-          reject(await res.text())
-          return
+        if (res.status != 200) {
+          reject(await res.text());
+          return;
         }
         let txt = await res.json();
         resolve(txt);
@@ -141,11 +138,10 @@ class ToyDbQuery {
         reject(err);
       }
     });
-    return p 
-
+    return p;
   }
-  where({field,value,collection}){
-    if (!collection||!field||!value) {
+  where({ field, value, collection }) {
+    if (!collection || !field || !value) {
       let p = new Promise((resolve, reject) => {
         reject(Error("Collection , ID, field,value must be specified"));
       });
@@ -162,9 +158,9 @@ class ToyDbQuery {
 
       try {
         let res = await fetch(URL);
-        if(res.status!=200){
-          reject(await res.text())
-          return
+        if (res.status != 200) {
+          reject(await res.text());
+          return;
         }
         let txt = await res.json();
         resolve(txt);
@@ -172,63 +168,78 @@ class ToyDbQuery {
         reject(err);
       }
     });
-    return p
+    return p;
+  }
+
+  // field := r.FormValue("field")
+  // 	id := r.FormValue("id")
+  // 	value := r.FormValue("value")
+  // 	clc := r.FormValue("collection")
+  updateRecord({ field, value, collection, id }) {
+    if (!collection || !field || !value || !id) {
+      let p = new Promise((resolve, reject) => {
+        reject(Error("Collection , ID, field,value must be specified"));
+      });
+      return p;
+    }
+    let u = this.urlString + "update?";
+    let params = new URLSearchParams();
+    params.append("collection", collection);
+    params.append("value", value);
+    params.append("field", field);
+    params.append("id", id);
+
+    const URL = u + params.toString();
+    let p = new Promise(async (resolve, reject) => {
+      console.log(u + params.toString());
+
+      try {
+        let res = await fetch(URL, { method: "PUT" });
+        if (res.status != 200) {
+          reject(await res.text());
+          return;
+        }
+        let txt = await res.json();
+        resolve(txt);
+      } catch (err) {
+        reject(err);
+      }
+    });
+    return p;
+  }
+
+  addNewField({ field, value, collection, id }) {
+    if (!collection || !field || !value || !id) {
+      let p = new Promise((resolve, reject) => {
+        reject(Error("Collection , ID, field,value must be specified"));
+      });
+      return p;
+    }
+    let u = this.urlString + "addField?";
+    let params = new URLSearchParams();
+    params.append("collection", collection);
+    params.append("value", value);
+    params.append("field", field);
+    params.append("id", id);
+
+    const URL = u + params.toString();
+    let p = new Promise(async (resolve, reject) => {
+      console.log(u + params.toString());
+
+      try {
+        let res = await fetch(URL, { method: "PUT" });
+        if (res.status != 200) {
+          reject(await res.text());
+          return;
+        }
+        let txt = await res.json();
+        resolve(txt);
+      } catch (err) {
+        reject(err);
+      }
+    });
+    return p;
   }
 }
-let tdb = new ToyDbQuery("http://localhost:2080");
-// tdb
-//   .connect()
-//   .then((msg) => console.log(msg))
-//   .catch((err) => console.log(err));
 
-// tdb
-//   .createColllection("student72")
-//   .then((msg) => console.log(msg))
-//   .catch((err) => console.log(err));
-
-tdb
-  .listCollection()
-  .then((msg) => console.log(msg))
-  .catch((err) => console.log(err));
-
-// tdb
-//   .addRecord("student72",{
-//     name:"GK",
-//     class:"2-bca-a",
-//     sex:"male"
-//   })
-//   .then((msg) => console.log(msg))
-//   .catch((err) => console.log(err));
-
-// tdb
-//   .query({ limit:0,collection:"users"})
-//   .then((msg) => console.log(msg))
-//   .catch((err) => console.log(err));
-tdb
-  .find({ collection:"users",id:"0a2c45fb-fb9d-40f6-a923-a873ef36fd75"})
-  .then((msg) => console.log(msg))
-  .catch((err) => console.error(err));
-  tdb
-  .where({ collection:"users",field:"name",value:"Cynthia"})
-  .then((msg) => console.log(msg))
-  .catch((err) => console.error(err));
-  tdb
-  .where({ collection:"users",field:"name",value:"Cynthia"})
-  .then((msg) => console.log(msg))
-  .catch((err) => console.error(err));
-  tdb
-  .where({ collection:"users",field:"name",value:"Cynthia"})
-  .then((msg) => console.log(msg))
-  .catch((err) => console.error(err));
-  tdb
-  .where({ collection:"users",field:"name",value:"Cynthia"})
-  .then((msg) => console.log(msg))
-  .catch((err) => console.error(err));
-  tdb
-  .where({ collection:"users",field:"name",value:"Cynthia"})
-  .then((msg) => console.log(msg))
-  .catch((err) => console.error(err));
-  tdb
-  .where({ collection:"users",field:"name",value:"Cynthia"})
-  .then((msg) => console.log(msg))
-  .catch((err) => console.error(err));
+module.exports = ToyDbQuery
