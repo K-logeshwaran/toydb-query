@@ -82,6 +82,9 @@ Adds a new field with a value to a record in a collection.
 - Returns: Promise resolving to a success message.
 
 ## Usage
+```bash
+npm install @k-logeshwaran/toydb-query
+```
 ```javascript
 const ToyDbQuery = require('toy-db-query'); // For CommonJS
 // or
